@@ -14,22 +14,34 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="awesome_cos"
-                    android:textSize="20sp"
-                    android:layout_centerVertical="true"
-                    android:textStyle="bold"/>
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:id="@+id/profile_to_settings"
+                    android:id="@+id/edit_back_btn"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_back_btn"
+                    />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/settings_save_changes"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_ellipses"
-                   />
+                    android:layout_marginRight="15dp"
+                    android:src="@drawable/ic_save_changes"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Edit Profile"
+                    android:layout_toRightOf="@+id/edit_back_btn"
+                    android:textSize="20sp"
+                    android:layout_centerVertical="true"
+                    android:textStyle="bold"/>
+
 
 
             </RelativeLayout>
