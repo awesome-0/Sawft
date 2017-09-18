@@ -49,7 +49,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
 
         final Viewholder finalHolder = holder;
         Picasso.with(ctx).load(imgUrls.get(position)).placeholder(R.drawable.ic_default_avatar).networkPolicy(NetworkPolicy.OFFLINE)
-                .fit().centerCrop().into(holder.imgs, new Callback() {
+                .resize(400,400).centerCrop().into(holder.imgs, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -58,7 +58,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
             @Override
             public void onError() {
                 Picasso.with(ctx).load(imgUrls.get(position)).placeholder(R.drawable.ic_default_avatar)
-                        .fit().centerCrop().into(finalHolder.imgs);
+                        .resize(400,400).centerCrop().into(finalHolder.imgs);
             }
         });
 
@@ -66,6 +66,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
     }
 
     private void setImages(){
+        imgUrls.add("https://realfood.tesco.com/media/images/303-BakingA-triple-chocolate-celebration-cake-LH--00576a54-8848-4d14-b66e-35c6ae9a78a2-0-1400x919.jpg");
         imgUrls.add("https://thumbs.dreamstime.com/z/profile-icon-male-avatar-man-hipster-style-fashion-cartoon-guy-beard-glasses-portrait-casual-person-silhouette-face-flat-design-62449823.jpg");
         imgUrls.add("https://thumbs.dreamstime.com/m/profile-icon-male-hispanic-avatar-portrait-casual-person-silhouette-face-flat-design-vector-52547844.jpg");
         imgUrls.add("https://thumbs.dreamstime.com/m/profile-icon-female-avatar-woman-portrait-casual-person-silhouette-face-flat-design-vector-illustration-58249445.jpg");
