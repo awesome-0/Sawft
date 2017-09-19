@@ -1,5 +1,7 @@
 package com.example.samuel.sawft.Home;
 
+import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,20 +9,28 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.samuel.sawft.LoginActivity;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final int ACTIVITY_NUMBER = 0;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        setUpAuth();
         setUpBottomNavBar();
         setUpViewPager();
+
     }
 
     public void setUpBottomNavBar(){
@@ -46,7 +56,32 @@ public class HomeActivity extends AppCompatActivity {
         tabs.getTabAt(1).setIcon(R.drawable.ic_house);
         tabs.getTabAt(2).setIcon(R.drawable.ic_send);
 
+    }
+    public void setUpAuth(){
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                if(mAuth.getCurrentUser() != null){
 
+                }
+                else{
+                    Intent loginInent = new Intent(HomeActivity.this, LoginActivity.class);
+                    startActivity(loginInent);
+                }
+            }
+        };
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAuth.removeAuthStateListener(mAuthListener);
     }
 }

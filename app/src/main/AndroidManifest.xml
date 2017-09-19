@@ -26,13 +26,7 @@
         <activity android:name=".Share.ShareActivity" />
         <activity android:name=".Profile.ProfileActivity" />
         <activity android:name=".Profile.SettingsActivity" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".LoginActivity"></activity>
         <activity android:name=".RegisterActivity"></activity>
     </application>
 

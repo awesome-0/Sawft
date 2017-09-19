@@ -85,17 +85,17 @@
         android:layout_marginTop="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:id="@+id/register_btn"
+        android:id="@+id/login_btn"
         android:textSize="18sp"
         android:textColor="@color/black"
         android:background="@drawable/login_btn_outline"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/l1"
+        android:id="@+id/dL"
         android:layout_marginTop="20dp"
         android:visibility="invisible"
-        android:layout_centerHorizontal="true">
+        android:layout_centerInParent="true">
 
         <ProgressBar
             android:layout_width="150dp"
@@ -105,7 +105,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please Wait...."
+            android:text="Logging in...."
             android:layout_centerHorizontal="true"
             android:layout_below="@id/tv"
             android:textSize="18sp"
@@ -118,7 +118,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No Account yet? Create one"
-        android:layout_below="@id/register_btn"
+        android:layout_below="@id/login_btn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textSize="20sp"

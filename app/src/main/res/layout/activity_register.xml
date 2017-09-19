@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:backgroundTintMode="multiply"
     tools:context="com.example.samuel.sawft.LoginActivity">
 
     <LinearLayout
@@ -98,27 +99,27 @@
         android:layout_marginTop="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:id="@+id/register_btn"
+        android:id="@+id/login_btn"
         android:textSize="18sp"
         android:textColor="@color/black"
         android:background="@drawable/login_btn_outline"/>
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/l1"
-        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/dL"
         android:visibility="invisible"
-        android:layout_centerHorizontal="true">
+        android:layout_centerInParent="true">
 
         <ProgressBar
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:id="@+id/tv"/>
+            android:id="@+id/tv"
+            android:layout_centerInParent="true"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Please Wait...."
+            android:text="Registering ...."
             android:layout_centerHorizontal="true"
             android:layout_below="@id/tv"
             android:textSize="18sp"
@@ -131,11 +132,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Already have an account? Login"
-        android:layout_below="@id/register_btn"
+        android:layout_below="@id/login_btn"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:textSize="20sp"
         android:textColor="@android:color/holo_blue_light"
-        android:onClick="RegisterUser"/>
+        android:onClick="RegisterNewUser"/>
 
 </RelativeLayout>
