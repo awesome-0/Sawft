@@ -1,4 +1,4 @@
-package com.example.samuel.sawft;
+package com.example.samuel.sawft.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +14,10 @@ import android.widget.RelativeLayout;
 import com.example.samuel.sawft.Home.HomeActivity;
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
+import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.StringMan;
+import com.example.samuel.sawft.Utils.print;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;

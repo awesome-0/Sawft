@@ -16,7 +16,7 @@ import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.Consts;
-import com.example.samuel.sawft.print;
+import com.example.samuel.sawft.Utils.print;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

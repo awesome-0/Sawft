@@ -15,10 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.example.samuel.sawft.Home.HomeActivity;
-import com.example.samuel.sawft.LoginActivity;
+import com.example.samuel.sawft.Login.LoginActivity;
 import com.example.samuel.sawft.R;
-import com.example.samuel.sawft.RegisterActivity;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
 import com.example.samuel.sawft.Utils.SectionStatePagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,4 +1,4 @@
-package com.example.samuel.sawft;
+package com.example.samuel.sawft.Utils;
 
 import android.app.Application;
 import android.content.Context;

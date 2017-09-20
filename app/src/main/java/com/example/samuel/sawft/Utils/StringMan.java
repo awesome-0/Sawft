@@ -1,6 +1,5 @@
 package com.example.samuel.sawft.Utils;
 
-import com.example.samuel.sawft.print;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**

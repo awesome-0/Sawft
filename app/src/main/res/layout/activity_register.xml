@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTintMode="multiply"
-    tools:context="com.example.samuel.sawft.LoginActivity">
+    tools:context="com.example.samuel.sawft.Login.LoginActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
