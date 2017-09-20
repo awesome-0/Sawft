@@ -5,4 +5,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="sign_out">Sign Out</string>
+    <string name="calling_activity">Calling Activity</string>
+    <string name="profile_activity">Profile Activity</string>
+    <string name="username">username</string>
+    <string name="display_name">display_name</string>
+    <string name="website">website</string>
+    <string name="description">description</string>
+    <string name="email">email</string>
+    <string name="phone_no">phone_no</string>
+    <string name="userBundle">userBundle</string>
+    <string name="userId">user_id</string>
 </resources>

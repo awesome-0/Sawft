@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.samuel.sawft.GridImageAdapter;
+import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
@@ -46,11 +45,13 @@ public class ProfileActivity extends AppCompatActivity {
     private GridAdapter adapter;
     private GridView recyclerView;
     private GridLayoutManager manager;
-    private TextView followers,following,posts,name,desc,website,username;
+    private TextView followers,following,posts,name,desc,website,username,edit_profile;
     private ValueEventListener getDetails;
     private FirebaseAuth mAuth;
     private DatabaseReference mRoot;
     private String current_user_id;
+    Bundle userStatBundle = new Bundle();
+    Bundle userBundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +64,18 @@ public class ProfileActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             current_user_id = mAuth.getCurrentUser().getUid();
         }
+        setUpWidgets();
         setUpBottomNavBar();
         setUpToolbar();   manager = new GridLayoutManager(this,3);
 //        recyclerView.setLayoutManager(manager);
 //        DividerItemDecoration decor = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
 //        recyclerView.addItemDecoration(decor);
 //        recyclerView.setAdapter(adapter);
-        setUpWidgets();
+        getUserStatus();
+
         GridImageAdapter addapter = new GridImageAdapter(ctx,R.layout.single_image_row);
         recyclerView.setAdapter(addapter);
-        getUserStatus();
+
 
 
 //
@@ -103,6 +106,17 @@ public class ProfileActivity extends AppCompatActivity {
        desc = (TextView) findViewById(R.id.desc);
        website = (TextView) findViewById(R.id.website);
        username = (TextView) findViewById(R.id.username);
+       edit_profile = (TextView) findViewById(R.id.editProfile);
+       edit_profile.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Intent editProf = new Intent(ProfileActivity.this,SettingsActivity.class);
+               editProf.putExtra(getString(R.string.calling_activity),getString(R.string.profile_activity));
+              editProf.putExtra(getString(R.string.calling_activity), userStatBundle);
+               editProf.putExtra(getString(R.string.userBundle),userBundle);
+               startActivity(editProf);
+           }
+       });
    }
 
    private void getUserStatus(){
@@ -113,6 +127,8 @@ public class ProfileActivity extends AppCompatActivity {
               UserDetails current_user =  dataSnapshot.child(Consts.USER_STATUS_KEY).child(current_user_id)
                        .getValue(UserDetails.class);
                bindViews(current_user);
+               User user = dataSnapshot.child(Consts.USERS_KEY).child(current_user_id).getValue(User.class);
+               sendDetailsToEditProfileFragment(user);
            }
 
            @Override
@@ -122,8 +138,15 @@ public class ProfileActivity extends AppCompatActivity {
        };
    }
 
+    private void sendDetailsToEditProfileFragment(User user) {
+        userBundle.putString(getString(R.string.email),user.getEmail());
+        userBundle.putString(getString(R.string.phone_no),String.valueOf(user.getPhone_number()));
+
+    }
+
     private void bindViews(final UserDetails current_user) {
         progressBar.setVisibility(View.INVISIBLE);
+
         posts.setText(String.valueOf(current_user.getPosts()));
         name.setText(current_user.getDisplay_name());
         desc.setText(current_user.getDescription());
@@ -131,6 +154,11 @@ public class ProfileActivity extends AppCompatActivity {
         followers.setText(String.valueOf(current_user.getFollowers()));
         website.setText(current_user.getWebsite());
         username.setText(current_user.getUsername());
+        userStatBundle.putString(getString(R.string.username),current_user.getUsername());
+        userStatBundle.putString(getString(R.string.display_name),current_user.getDisplay_name());
+        userStatBundle.putString(getString(R.string.website),current_user.getWebsite());
+        userStatBundle.putString(getString(R.string.description),current_user.getDescription());
+        userStatBundle.putString(getString(R.string.userId),current_user_id);
         Picasso.with(ProfileActivity.this).load(current_user.getProfile_photo()).placeholder(R.drawable.ic_default_avatar)
                 .networkPolicy(NetworkPolicy.OFFLINE).fit().centerCrop()
                 .into(profilePhoto, new Callback() {

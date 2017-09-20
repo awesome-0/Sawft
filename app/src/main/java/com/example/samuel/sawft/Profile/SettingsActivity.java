@@ -32,6 +32,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ViewPager pager;
     private RelativeLayout layout;
     private FirebaseAuth mAuth;
+    Bundle bundle = new Bundle();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         layout = (RelativeLayout) findViewById(R.id.relLayout);
         pager = (ViewPager) findViewById(R.id.container);
+        getFragPosition();
 
         ImageView back_btn = (ImageView) findViewById(R.id.edit_back_btn);
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +53,16 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void getFragPosition() {
+        Intent intent =  getIntent();
+        if(intent.hasExtra(getString(R.string.calling_activity))){
+            setUpViewPager(0);
+            bundle = intent.getBundleExtra(getString(R.string.calling_activity));
+
+
+        }
     }
 
     private void setUpListView(){
