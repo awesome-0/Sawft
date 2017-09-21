@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.samuel.sawft.Share.CameraShareFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/rel1">
+
+
+        <!--  Share Top Bar-->
+        <include layout="@layout/gallery_toolbar"/>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rel1"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="60">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/share_image"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"/>
+            <ProgressBar
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerInParent="true"
+                android:id="@+id/share_progressBar"/>
+        </RelativeLayout>
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            android:numColumns="3"
+            android:id="@+id/share_grid"
+            android:horizontalSpacing="1dp"
+            android:verticalSpacing="1dp"
+            android:layout_marginTop="1dp"
+            android:stretchMode="none"
+            android:gravity="center">
+
+
+        </GridView>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

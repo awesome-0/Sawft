@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.samuel.sawft.Share.ShareActivity">
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="share activity"
-        android:textSize="30sp"/>
+        android:layout_height="match_parent"
+        android:id="@+id/r1"
+        android:layout_marginBottom="50dp">
 
-</android.support.constraint.ConstraintLayout>
+        <include layout="@layout/layout_center_viewpager"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/share_bottom_bar"/>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

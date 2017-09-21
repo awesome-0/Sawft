@@ -73,8 +73,8 @@ public class ProfileActivity extends AppCompatActivity {
 //        recyclerView.setAdapter(adapter);
         getUserStatus();
 
-        GridImageAdapter addapter = new GridImageAdapter(ctx,R.layout.single_image_row);
-        recyclerView.setAdapter(addapter);
+//        GridImageAdapter addapter = new GridImageAdapter(ctx,R.layout.single_image_row);
+//        recyclerView.setAdapter(addapter);
 
 
 

@@ -15,6 +15,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -25,11 +26,14 @@ public class GridImageAdapter extends ArrayAdapter<String> {
     private int layout;
     private Context ctx;
     private ArrayList<String> imgUrls = new ArrayList<>();
-    public GridImageAdapter(@NonNull Context context, @LayoutRes int resource) {
+    private String append;
+    public GridImageAdapter(@NonNull Context context, @LayoutRes int resource,ArrayList<String> str,String append) {
         super(context, resource);
         layout = resource;
         ctx = context;
-        setImages();
+      //  setImages();
+        imgUrls = str;
+        this.append = append;
     }
 
     @NonNull
@@ -48,8 +52,8 @@ public class GridImageAdapter extends ArrayAdapter<String> {
         }
 
         final Viewholder finalHolder = holder;
-        Picasso.with(ctx).load(imgUrls.get(position)).placeholder(R.drawable.ic_default_avatar).networkPolicy(NetworkPolicy.OFFLINE)
-                .resize(400,400).centerCrop().into(holder.imgs, new Callback() {
+        Picasso.with(ctx).load(new File(imgUrls.get(position))).placeholder(R.drawable.ic_default_avatar).networkPolicy(NetworkPolicy.OFFLINE)
+                .resize(350,450).centerCrop().into(holder.imgs, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -57,8 +61,8 @@ public class GridImageAdapter extends ArrayAdapter<String> {
 
             @Override
             public void onError() {
-                Picasso.with(ctx).load(imgUrls.get(position)).placeholder(R.drawable.ic_default_avatar)
-                        .resize(400,400).centerCrop().into(finalHolder.imgs);
+                Picasso.with(ctx).load(new File(imgUrls.get(position))).placeholder(R.drawable.ic_default_avatar)
+                        .resize(350,450).centerCrop().into(finalHolder.imgs);
             }
         });
 
