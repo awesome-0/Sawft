@@ -52,7 +52,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
         }
 
         final Viewholder finalHolder = holder;
-        Picasso.with(ctx).load(new File(imgUrls.get(position))).placeholder(R.drawable.ic_default_avatar).networkPolicy(NetworkPolicy.OFFLINE)
+        Picasso.with(ctx).load(append +imgUrls.get(position)).placeholder(R.drawable.ic_default_avatar).networkPolicy(NetworkPolicy.OFFLINE)
                 .resize(350,450).centerCrop().into(holder.imgs, new Callback() {
             @Override
             public void onSuccess() {
@@ -61,7 +61,7 @@ public class GridImageAdapter extends ArrayAdapter<String> {
 
             @Override
             public void onError() {
-                Picasso.with(ctx).load(new File(imgUrls.get(position))).placeholder(R.drawable.ic_default_avatar)
+                Picasso.with(ctx).load(append +imgUrls.get(position)).placeholder(R.drawable.ic_default_avatar)
                         .resize(350,450).centerCrop().into(finalHolder.imgs);
             }
         });

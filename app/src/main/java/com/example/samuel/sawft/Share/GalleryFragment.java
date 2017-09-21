@@ -111,18 +111,19 @@ public class GalleryFragment extends Fragment {
 
     private void setUpGridView(String s) {
         final ArrayList<String> imgUrls = FileSearch.getFilePaths(s);
-        GridImageAdapter adapter = new GridImageAdapter(getActivity(),R.layout.single_image_row,imgUrls,"file:/");
+        GridImageAdapter adapter = new GridImageAdapter(getActivity(),R.layout.single_image_row,imgUrls,"file://");
         int col_width = getResources().getDisplayMetrics().widthPixels;
         share_grid.setColumnWidth((col_width/3));
         share_grid.setAdapter(adapter);
-        setImage(imgUrls.get(0));
-        share_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                setImage(imgUrls.get(i));
-            }
-        });
-
+        if(imgUrls.size()>0) {
+            setImage(imgUrls.get(0));
+            share_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    setImage(imgUrls.get(i));
+                }
+            });
+        }
     }
 
     private void setImage(String i) {
