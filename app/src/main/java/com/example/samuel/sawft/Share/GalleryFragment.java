@@ -1,6 +1,7 @@
 package com.example.samuel.sawft.Share;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -13,10 +14,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import com.example.samuel.sawft.GridImageAdapter;
+import com.example.samuel.sawft.Utils.GridImageAdapter;
+import com.example.samuel.sawft.NextActivity;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.FilePaths;
 import com.example.samuel.sawft.Utils.FileSearch;
@@ -35,6 +36,7 @@ public class GalleryFragment extends Fragment {
     TextView share_next;
     Spinner share_spinner;
     ProgressBar bar;
+    String mSelectedImage;
     ArrayList<String> directories;
     private static final String TAG = "GalleryFragment";
 
@@ -68,6 +70,10 @@ public class GalleryFragment extends Fragment {
         share_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent shareIntent = new Intent(getActivity(), NextActivity.class);
+                shareIntent.putExtra(getString(R.string.next_image),mSelectedImage);
+                startActivity(shareIntent);
+
 
             }
         });
@@ -117,10 +123,12 @@ public class GalleryFragment extends Fragment {
         share_grid.setAdapter(adapter);
         if(imgUrls.size()>0) {
             setImage(imgUrls.get(0));
+            mSelectedImage = imgUrls.get(0);
             share_grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     setImage(imgUrls.get(i));
+                    mSelectedImage = imgUrls.get(i);
                 }
             });
         }

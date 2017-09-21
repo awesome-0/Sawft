@@ -23,4 +23,34 @@ public class StringMan {
         return  name.replace(" ",".") + append;
 
     }
+    public static String getTags(String caption){
+        StringBuilder builder = new StringBuilder();
+        char[] array = caption.toCharArray();
+        boolean foundword = false;
+        if(caption.indexOf('#') >0){
+        for(char c: array){
+            if(c == '#'){
+                foundword = true;
+                builder.append(c);
+            }
+            else{
+                if(foundword){
+                    builder.append(c);
+                }
+                if(c==' '){
+                    foundword = false;
+                }
+            }
+        }
+
+            String tag = builder.toString().replace(" ","").replace("#",",#");
+            return tag.substring(1,tag.length());
+
+
+        }
+        else {
+            return caption;
+        }
+
+    }
 }

@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.samuel.sawft.GridImageAdapter;
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
 import com.example.samuel.sawft.R;
@@ -126,6 +125,7 @@ public class ProfileActivity extends AppCompatActivity {
 
               UserDetails current_user =  dataSnapshot.child(Consts.USER_STATUS_KEY).child(current_user_id)
                        .getValue(UserDetails.class);
+
                bindViews(current_user);
                User user = dataSnapshot.child(Consts.USERS_KEY).child(current_user_id).getValue(User.class);
                sendDetailsToEditProfileFragment(user);
