@@ -1,9 +1,11 @@
 package com.example.samuel.sawft.Utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.view.MenuItem;
 
 import com.example.samuel.sawft.Home.HomeActivity;
@@ -27,7 +29,7 @@ public class BottomNavigationHelper {
         ex.setTextVisibility(false);
 
     }
-    public static void enableNavigation (final Context ctx, BottomNavigationViewEx view){
+    public static void enableNavigation (final Context ctx, final Activity activity, final BottomNavigationViewEx view){
 
         view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -36,22 +38,27 @@ public class BottomNavigationHelper {
                     case R.id.ic_house:
                         Intent intent1 = new Intent(ctx, HomeActivity.class);
                         ctx.startActivity(intent1);
+                        activity.overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         break;
                     case R.id.ic_search:
                         Intent intent2 = new Intent(ctx, SearchActivity.class);
                         ctx.startActivity(intent2);
+                        activity.overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         break;
                     case R.id.ic_circle:
                         Intent intent3 = new Intent(ctx, ShareActivity.class);
                         ctx.startActivity(intent3);
+                        activity.overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         break;
                     case R.id.ic_alert:
                         Intent intent4 = new Intent(ctx, LikesActivity.class);
                         ctx.startActivity(intent4);
+                        activity.overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         break;
                     case R.id.ic_android:
                         Intent intent5 = new Intent(ctx, ProfileActivity.class);
                         ctx.startActivity(intent5);
+                        activity.overridePendingTransition(R.anim.fade_in,R.anim.fade_out);
                         break;
 
 

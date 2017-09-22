@@ -2,7 +2,9 @@ package com.example.samuel.sawft.Share;
 
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,16 +18,30 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.samuel.sawft.Profile.ProfileActivity;
+import com.example.samuel.sawft.Profile.SettingsActivity;
+import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.GridImageAdapter;
 import com.example.samuel.sawft.NextActivity;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.FilePaths;
 import com.example.samuel.sawft.Utils.FileSearch;
+import com.example.samuel.sawft.Utils.print;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +54,11 @@ public class GalleryFragment extends Fragment {
     ProgressBar bar;
     String mSelectedImage;
     ArrayList<String> directories;
+    private StorageReference mStorage;
+    private FirebaseAuth mAuth;
+    private DatabaseReference mRoot;
+    boolean uploaded;
+    String imgUrl;
     private static final String TAG = "GalleryFragment";
 
 
@@ -60,6 +81,8 @@ public class GalleryFragment extends Fragment {
         share_grid = view.findViewById(R.id.share_grid);
         bar = view.findViewById(R.id.share_progressBar);
         bar.setVisibility(View.VISIBLE);
+        mAuth = FirebaseAuth.getInstance();
+        mRoot = FirebaseDatabase.getInstance().getReference();
 
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,10 +93,17 @@ public class GalleryFragment extends Fragment {
         share_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent shareIntent = new Intent(getActivity(), NextActivity.class);
-                shareIntent.putExtra(getString(R.string.next_image),mSelectedImage);
-                startActivity(shareIntent);
 
+                if(getActivity().getIntent().hasExtra("change_photo")){
+                    uploadProfilePhoto();
+
+
+                }
+                else {
+                    Intent shareIntent = new Intent(getActivity(), NextActivity.class);
+                    shareIntent.putExtra(getString(R.string.next_image), mSelectedImage);
+                    startActivity(shareIntent);
+                }
 
             }
         });
@@ -81,6 +111,34 @@ public class GalleryFragment extends Fragment {
 
         return view;
     }
+
+    private void uploadProfilePhoto() {
+        File profilePic = new File(mSelectedImage);
+        mStorage = FirebaseStorage.getInstance().getReference();
+       StorageReference profilePicPath = mStorage.child(Consts.FIREBASE_IMAGE_LOCATION + "/" +
+               mAuth.getCurrentUser().getUid() +"/profilePhoto");
+        print.t(getActivity(),"Please wait while we upload");
+        profilePicPath.putFile(Uri.fromFile(profilePic))
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()){
+                            print.l("                                            done uploading");
+
+                            Intent editProfile = new Intent(getActivity(), ProfileActivity.class);
+                            startActivity(editProfile);
+                            getActivity().finish();
+                            Map addPhoto = new HashMap<>();
+                            addPhoto.put(Consts.USER_STATUS_KEY + "/" + mAuth.getCurrentUser().getUid() + "/" + "profile_photo",task.getResult().getDownloadUrl().toString());
+                            mRoot.updateChildren(addPhoto);
+                            uploaded = true;
+                        }
+
+                    }
+                });
+
+    }
+
     private void init(){
 
         FilePaths filePaths = new FilePaths();

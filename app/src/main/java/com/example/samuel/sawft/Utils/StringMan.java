@@ -49,7 +49,7 @@ public class StringMan {
 
         }
         else {
-            return caption;
+            return "";
         }
 
     }

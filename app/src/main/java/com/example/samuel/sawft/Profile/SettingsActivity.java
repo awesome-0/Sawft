@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.samuel.sawft.Login.LoginActivity;
 import com.example.samuel.sawft.R;
@@ -30,6 +31,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ViewPager pager;
     private RelativeLayout layout;
     private FirebaseAuth mAuth;
+
     Bundle bundle = new Bundle();
 
     @Override
@@ -51,6 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     private void getFragPosition() {
@@ -58,8 +61,6 @@ public class SettingsActivity extends AppCompatActivity {
         if(intent.hasExtra(getString(R.string.calling_activity))){
             setUpViewPager(0);
             bundle = intent.getBundleExtra(getString(R.string.calling_activity));
-
-
         }
     }
 
@@ -131,7 +132,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         BottomNavigationViewEx bottomBar = (BottomNavigationViewEx) findViewById(R.id.bottom_nav_bar);
         BottomNavigationHelper.setUpBottomNavToolBar(bottomBar);
-        BottomNavigationHelper.enableNavigation(SettingsActivity.this,bottomBar);
+        BottomNavigationHelper.enableNavigation(SettingsActivity.this,this,bottomBar);
         Menu menu = bottomBar.getMenu();
         MenuItem item = menu.getItem(ACTIVITY_NUMBER);
         item.setChecked(true);

@@ -14,11 +14,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.samuel.sawft.Models.Photo;
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
 import com.example.samuel.sawft.Utils.Consts;
+import com.example.samuel.sawft.Utils.GridImageAdapter;
+import com.example.samuel.sawft.Utils.print;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +32,9 @@ import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,9 +66,12 @@ public class ProfileActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         mAuth = FirebaseAuth.getInstance();
         mRoot = FirebaseDatabase.getInstance().getReference();
+
         if (mAuth.getCurrentUser() != null) {
             current_user_id = mAuth.getCurrentUser().getUid();
         }
+        mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).keepSynced(true);
+        mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id).keepSynced(true);
         setUpWidgets();
         setUpBottomNavBar();
         setUpToolbar();   manager = new GridLayoutManager(this,3);
@@ -70,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
 //        DividerItemDecoration decor = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
 //        recyclerView.addItemDecoration(decor);
 //        recyclerView.setAdapter(adapter);
-        getUserStatus();
+
 
 //        GridImageAdapter addapter = new GridImageAdapter(ctx,R.layout.single_image_row);
 //        recyclerView.setAdapter(addapter);
@@ -79,10 +88,46 @@ public class ProfileActivity extends AppCompatActivity {
 
 //
 
+        setUpGridView();
 
     }
 
-   public void setUpToolbar(){
+    private void setUpGridView() {
+        final ArrayList<Photo> photoArrayList = new ArrayList<>();
+        final ArrayList<Photo> reverse = new ArrayList<>();
+        final ArrayList<String> photo_url = new ArrayList<>();
+
+        mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot snaps : dataSnapshot.getChildren()){
+                    Photo photo = snaps.getValue(Photo.class);
+                    photoArrayList.add(photo);
+                }
+                Collections.reverse(photoArrayList);
+
+                for(int i = 0;i<photoArrayList.size();i++){
+                    photo_url.add(photoArrayList.get(i).getImage_url());
+                    print.l("photo urls :::::::::::::::::::::::::::::::::::::::::; " + photoArrayList.get(i).getImage_url());
+                }
+
+                GridImageAdapter adapter = new GridImageAdapter(ProfileActivity.this,
+                        R.layout.single_image_row,photo_url,"");
+                int col_width = getResources().getDisplayMetrics().widthPixels;
+                recyclerView.setColumnWidth((col_width/3));
+                recyclerView.setAdapter(adapter);
+                print.l("number of photoArrayList ::::::::::::::::::::::::" + photoArrayList.size());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    public void setUpToolbar(){
        Toolbar bar = (Toolbar) findViewById(R.id.profile_toolbar);
        setSupportActionBar(bar);
        ImageView back_btn = (ImageView)findViewById(R.id.profile_to_settings);
@@ -123,11 +168,10 @@ public class ProfileActivity extends AppCompatActivity {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
 
-              UserDetails current_user =  dataSnapshot.child(Consts.USER_STATUS_KEY).child(current_user_id)
-                       .getValue(UserDetails.class);
+              UserDetails current_user =  dataSnapshot.getValue(UserDetails.class);
 
                bindViews(current_user);
-               User user = dataSnapshot.child(Consts.USERS_KEY).child(current_user_id).getValue(User.class);
+               User user = dataSnapshot.getValue(User.class);
                sendDetailsToEditProfileFragment(user);
            }
 
@@ -159,8 +203,9 @@ public class ProfileActivity extends AppCompatActivity {
         userStatBundle.putString(getString(R.string.website),current_user.getWebsite());
         userStatBundle.putString(getString(R.string.description),current_user.getDescription());
         userStatBundle.putString(getString(R.string.userId),current_user_id);
+        userStatBundle.putString(getString(R.string.profile_photo),current_user.getProfile_photo());
         Picasso.with(ProfileActivity.this).load(current_user.getProfile_photo()).placeholder(R.drawable.ic_default_avatar)
-                .networkPolicy(NetworkPolicy.OFFLINE).fit().centerCrop()
+                .networkPolicy(NetworkPolicy.OFFLINE).resize(200,200).centerCrop()
                 .into(profilePhoto, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -170,7 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onError() {
                         Picasso.with(ProfileActivity.this).load(current_user.getProfile_photo()).placeholder(R.drawable.ic_default_avatar)
-                                .fit().centerCrop().into(profilePhoto);
+                                .resize(200,200).centerCrop().into(profilePhoto);
 
                     }
                 });
@@ -181,7 +226,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         BottomNavigationViewEx bottomBar = (BottomNavigationViewEx) findViewById(R.id.bottom_nav_bar);
         BottomNavigationHelper.setUpBottomNavToolBar(bottomBar);
-        BottomNavigationHelper.enableNavigation(ProfileActivity.this,bottomBar);
+        BottomNavigationHelper.enableNavigation(ProfileActivity.this,this,bottomBar);
         Menu menu = bottomBar.getMenu();
         MenuItem item = menu.getItem(ACTIVITY_NUMBER);
         item.setChecked(true);
@@ -190,8 +235,10 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getUserStatus();
         if(mAuth.getCurrentUser()!=null){
-            mRoot.addValueEventListener(getDetails);
+            mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).addListenerForSingleValueEvent(getDetails);
+
         }
 
     }
@@ -200,7 +247,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (mAuth.getCurrentUser() != null) {
-            mRoot.removeEventListener(getDetails);
+            mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).removeEventListener(getDetails);
         }
     }
 }

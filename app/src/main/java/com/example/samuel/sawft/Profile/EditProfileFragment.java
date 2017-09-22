@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
 import com.example.samuel.sawft.R;
+import com.example.samuel.sawft.Share.ShareActivity;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.print;
 import com.google.firebase.database.DataSnapshot;
@@ -43,11 +45,12 @@ public class EditProfileFragment extends Fragment {
     private DatabaseReference mRoot;
     private String current_user_id;
     public static final String USERNAME = "username";
-    String saved_user_name, saved_phoneNo, saved_website, saved_desc, saved_displayname;
+    String saved_user_name, saved_phoneNo, saved_website, saved_desc, saved_displayname,saved_photo;
     String saved_email;
-    UserDetails updatedDetails ;
-    Map update ;
+    UserDetails updatedDetails;
+    Map update;
     User updateUserDetails;
+    private TextView mChangePhoto;
 
     public EditProfileFragment() {
         // Required empty public constructor
@@ -64,7 +67,7 @@ public class EditProfileFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         updatedDetails = new UserDetails();
         update = new HashMap();
-        updateUserDetails =new User();
+        updateUserDetails = new User();
         if (intent.hasExtra(getString(R.string.calling_activity))) {
 
             Bundle bundle = intent.getBundleExtra(getString(R.string.calling_activity));
@@ -76,10 +79,11 @@ public class EditProfileFragment extends Fragment {
             saved_email = userBundle.getString(getString(R.string.email));
             current_user_id = bundle.getString(getString(R.string.userId));
             saved_phoneNo = userBundle.getString(getString(R.string.phone_no));
+            saved_photo = bundle.getString(getString(R.string.profile_photo));
             bindPersonalnfo(saved_email, saved_phoneNo);
             bindBundle(saved_user_name, saved_displayname, saved_website, saved_desc);
         }
-        Picasso.with(container.getContext()).load(dummy).placeholder(R.drawable.ic_default_avatar)
+        Picasso.with(container.getContext()).load(saved_photo).placeholder(R.drawable.ic_default_avatar)
                 .fit().centerCrop().into(profilePhoto, new Callback() {
             @Override
             public void onSuccess() {
@@ -89,7 +93,7 @@ public class EditProfileFragment extends Fragment {
             @Override
             public void onError() {
 
-                Picasso.with(container.getContext()).load(dummy).placeholder(R.drawable.ic_default_avatar).fit().centerCrop()
+                Picasso.with(container.getContext()).load(saved_photo).placeholder(R.drawable.ic_default_avatar).fit().centerCrop()
                         .into(profilePhoto);
             }
         });
@@ -105,6 +109,15 @@ public class EditProfileFragment extends Fragment {
 
                 getDetails();
 
+            }
+        });
+        mChangePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               Intent intent =  new Intent(getActivity(), ShareActivity.class);
+                intent.putExtra("change_photo",1);
+                getActivity().startActivity(intent);
+                getActivity().finish();
             }
         });
 
@@ -136,6 +149,7 @@ public class EditProfileFragment extends Fragment {
         phoneNo = v.findViewById(R.id.phoneNumber);
         website = v.findViewById(R.id.website);
         saveBtn = v.findViewById(R.id.settings_save_changes);
+        mChangePhoto = v.findViewById(R.id.change_photo);
     }
 
     private void getDetails() {
@@ -153,7 +167,6 @@ public class EditProfileFragment extends Fragment {
             , final String gemail, final String gphoneNo) {
 
 
-
         if (gname.equals(saved_user_name) && gdisplayname.equals(saved_displayname) && gdesc.equals(saved_desc)
                 && gwebsite.equals(saved_website) && gemail.equals(saved_email) && gphoneNo.equals(saved_phoneNo)) {
 
@@ -164,51 +177,52 @@ public class EditProfileFragment extends Fragment {
 //            if(!gname.equals(saved_user_name) ||!gemail.equals(saved_email) ||
 //                    !gdisplayname.equals(saved_displayname) || !gdesc.equals(saved_desc)
 //                            || !gwebsite.equals(saved_website)) {
-                if (gname.equals(saved_user_name)) {
-                    mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("description").setValue(gdesc);
-                    mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("website").setValue(gwebsite);
-                    mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("display_name").setValue(gdisplayname);
-                    getActivity().finish();
+            if (gname.equals(saved_user_name)) {
+                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("description").setValue(gdesc);
+                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("website").setValue(gwebsite);
+                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("display_name").setValue(gdisplayname);
+                getActivity().finish();
 
 
-                } else {
+            } else {
 
-                    Query query = mRoot.child(Consts.USER_STATUS_KEY).orderByChild(USERNAME)
-                            .equalTo(gname);
+                Query query = mRoot.child(Consts.USER_STATUS_KEY).orderByChild(USERNAME)
+                        .equalTo(gname);
 
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if (dataSnapshot.exists()) {
-                                print.t(getActivity(), "username exists");
-                                return;
-                            } else {
-                                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("username").setValue(gname);
-                                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("description").setValue(gdesc);
-                                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("website").setValue(gwebsite);
-                                mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("display_name").setValue(gdisplayname);
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            print.t(getActivity(), "username exists");
+                            return;
+                        } else {
+                            mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("username").setValue(gname);
+                            mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("description").setValue(gdesc);
+                            mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("website").setValue(gwebsite);
+                            mRoot.child(Consts.USER_STATUS_KEY).child(current_user_id).child("display_name").setValue(gdisplayname);
 
-                                getActivity().finish();
-                            }
+                            getActivity().finish();
+                        }
 //                        if(!gemail.equals(saved_email)){
 //                            getPassword();
 //
 //                        }
 
-                        }
+                    }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                        }
+                    }
 
-                    });
-                }
+                });
             }
+        }
 
 
     }
-    private void getPassword(){
+
+    private void getPassword() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final View view = getActivity().getLayoutInflater().inflate(R.layout.getpassword, null, false);
         builder.setView(view);

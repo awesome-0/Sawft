@@ -116,8 +116,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/grid_view"
-                android:verticalSpacing="2dp"
-                android:horizontalSpacing="2dp"
+                android:verticalSpacing="1dp"
+                android:horizontalSpacing="1dp"
                 android:numColumns="3"
                 >
                 </GridView>

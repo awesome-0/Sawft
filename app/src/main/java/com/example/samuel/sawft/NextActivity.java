@@ -1,8 +1,7 @@
 package com.example.samuel.sawft;
 
+import android.content.Intent;
 import android.net.Uri;
-import android.provider.ContactsContract;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.samuel.sawft.Home.HomeActivity;
 import com.example.samuel.sawft.Models.Photo;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.StringMan;
@@ -30,7 +30,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,6 +42,7 @@ public class NextActivity extends AppCompatActivity {
     String current_user_id;
     TextView share;
     String photo_to_be_shared;
+    Uri imgUri;
 
     private static final String TAG = "NextActivity";
 
@@ -59,10 +59,55 @@ public class NextActivity extends AppCompatActivity {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(getIntent().hasExtra(getString(R.string.next_uri_image))){
+                    uploadUri();
+
+                }
+                else{
                 uploadPhoto();
             }
+                Intent Home = new Intent(NextActivity.this, HomeActivity.class);
+                startActivity(Home);
+                finish();
+            }
+
+
         });
        // uploadPhoto();
+    }
+
+    private void uploadUri() {
+        StorageReference ImagePath = mStorage.child(Consts.FIREBASE_IMAGE_LOCATION + "/" + current_user_id + "/photo" + (imagecount + 1));
+
+
+        ImagePath.putFile(imgUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                if(task.isSuccessful()){
+                    String time = String.valueOf(System.currentTimeMillis());
+                    String caption = mCaption.getText().toString();
+                    String tag = StringMan.getTags(caption);
+                    String imgUrl = task.getResult().getDownloadUrl().toString();
+                    String photo_id = mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id)
+                            .push().getKey();
+                    Photo newPhoto = new Photo(caption,time,tag,imgUrl,photo_id,current_user_id);
+                    Map addPhoto = new HashMap<>();
+                    addPhoto.put(Consts.USER_PHOTOS_KEY + "/" + current_user_id + "/" + photo_id,newPhoto);
+                    addPhoto.put(Consts.PHOTOS_KEY + "/" + photo_id,newPhoto);
+                    mRoot.updateChildren(addPhoto);
+                    print.t(NextActivity.this,"Photo upload Successful");
+
+                }
+                else{
+                    print.t(NextActivity.this,"Photo upload failed");
+
+                }
+            }
+        });
+
+
     }
 
     private void uploadPhoto() {
@@ -78,11 +123,11 @@ public class NextActivity extends AppCompatActivity {
                     String caption = mCaption.getText().toString();
                     String tag = StringMan.getTags(caption);
                     String imgUrl = task.getResult().getDownloadUrl().toString();
-                    String photo_id = mRoot.child(Consts.USER_PHOTS_KEY).child(current_user_id)
+                    String photo_id = mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id)
                             .push().getKey();
                     Photo newPhoto = new Photo(caption,time,tag,imgUrl,photo_id,current_user_id);
                     Map addPhoto = new HashMap<>();
-                    addPhoto.put(Consts.USER_PHOTS_KEY + "/" + current_user_id + "/" + photo_id,newPhoto);
+                    addPhoto.put(Consts.USER_PHOTOS_KEY + "/" + current_user_id + "/" + photo_id,newPhoto);
                     addPhoto.put(Consts.PHOTOS_KEY + "/" + photo_id,newPhoto);
                     mRoot.updateChildren(addPhoto);
                     print.t(NextActivity.this,"Photo upload Successful");
@@ -111,9 +156,18 @@ public class NextActivity extends AppCompatActivity {
             }
         });
         if(getIntent()!= null) {
+            if(getIntent().hasExtra(getString(R.string.next_uri_image))){
+               imgUri = Uri.parse(getIntent().getStringExtra(getString(R.string.next_uri_image)));
+                print.l("                                                       image Uri gotten:::" + imgUri.toString());
+                Picasso.with(NextActivity.this).load(imgUri).fit().centerCrop().placeholder(R.drawable.ic_default_avatar)
+                        .into(image);
+
+            }
+            else{
             photo_to_be_shared = getIntent().getStringExtra(getString(R.string.next_image));
             Picasso.with(NextActivity.this).load("file://" + photo_to_be_shared).fit().centerCrop().placeholder(R.drawable.ic_default_avatar)
             .into(image);
+        }
         }
 
     }
@@ -124,7 +178,7 @@ public class NextActivity extends AppCompatActivity {
 
     }
     public void getImageCount(){
-        mRoot.child(Consts.USER_PHOTS_KEY).child(current_user_id)
+        mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

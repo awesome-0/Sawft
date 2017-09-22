@@ -16,4 +16,6 @@
     <string name="userBundle">userBundle</string>
     <string name="userId">user_id</string>
     <string name="next_image">next_image</string>
+    <string name="profile_photo">profile_photo</string>
+    <string name="next_uri_image">next_uri_image</string>
 </resources>
