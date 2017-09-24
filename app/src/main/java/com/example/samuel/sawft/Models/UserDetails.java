@@ -1,10 +1,12 @@
 package com.example.samuel.sawft.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by Samuel on 18/09/2017.
  */
 
-public class UserDetails {
+public class UserDetails implements Serializable {
     private String description,display_name,
     username,website,
     profile_photo;

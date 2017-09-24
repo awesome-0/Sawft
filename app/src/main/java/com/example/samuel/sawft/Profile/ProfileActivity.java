@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -22,6 +23,7 @@ import com.example.samuel.sawft.Utils.BottomNavigationHelper;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.GridImageAdapter;
 import com.example.samuel.sawft.Utils.print;
+import com.example.samuel.sawft.ViewPost;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
     private String current_user_id;
     Bundle userStatBundle = new Bundle();
     Bundle userBundle = new Bundle();
+    UserDetails current_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,20 +106,31 @@ public class ProfileActivity extends AppCompatActivity {
                 for(DataSnapshot snaps : dataSnapshot.getChildren()){
                     Photo photo = snaps.getValue(Photo.class);
                     photoArrayList.add(photo);
+                    reverse.add(photo);
+
                 }
+
                 Collections.reverse(photoArrayList);
 
                 for(int i = 0;i<photoArrayList.size();i++){
                     photo_url.add(photoArrayList.get(i).getImage_url());
-                    print.l("photo urls :::::::::::::::::::::::::::::::::::::::::; " + photoArrayList.get(i).getImage_url());
-                }
+                    }
 
                 GridImageAdapter adapter = new GridImageAdapter(ProfileActivity.this,
                         R.layout.single_image_row,photo_url,"");
                 int col_width = getResources().getDisplayMetrics().widthPixels;
                 recyclerView.setColumnWidth((col_width/3));
                 recyclerView.setAdapter(adapter);
-                print.l("number of photoArrayList ::::::::::::::::::::::::" + photoArrayList.size());
+                recyclerView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        Intent intent = new Intent(ProfileActivity.this, ViewPost.class);
+                        intent.putExtra("photo",photoArrayList.get(i));
+                        intent.putExtra("user",current_user);
+                        startActivity(intent);
+                    }
+                });
+               // print.l("number of photoArrayList ::::::::::::::::::::::::" + photoArrayList.size());
             }
 
             @Override
@@ -167,8 +181,7 @@ public class ProfileActivity extends AppCompatActivity {
        getDetails = new ValueEventListener() {
            @Override
            public void onDataChange(DataSnapshot dataSnapshot) {
-
-              UserDetails current_user =  dataSnapshot.getValue(UserDetails.class);
+               current_user =  dataSnapshot.getValue(UserDetails.class);
 
                bindViews(current_user);
                User user = dataSnapshot.getValue(User.class);

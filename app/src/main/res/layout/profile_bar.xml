@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+   >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/rel1">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        app:civ_border_color="@color/black"
+        android:id="@+id/post_circle"
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true"
+        app:civ_border_width="0.5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="awesome_cos"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/post_user_name"
+        android:textColor="@color/black"
+        android:layout_toRightOf="@id/post_circle"
+        android:layout_centerVertical="true"
+        android:textSize="17sp"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_ellipses"
+        android:id="@+id/post_ellipses"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,10 +1,12 @@
 package com.example.samuel.sawft.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by Samuel on 21/09/2017.
  */
 
-public class Photo {
+public class Photo implements Serializable {
     private String caption,date_created,tags,image_url
             ,photo_id, user_id;
 
@@ -66,5 +68,17 @@ public class Photo {
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "caption='" + caption + '\'' +
+                ", date_created='" + date_created + '\'' +
+                ", tags='" + tags + '\'' +
+                ", image_url='" + image_url + '\'' +
+                ", photo_id='" + photo_id + '\'' +
+                ", user_id='" + user_id + '\'' +
+                '}';
     }
 }
