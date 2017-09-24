@@ -61,7 +61,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:src="@drawable/ic_heart_red"
-                        android:visibility="invisible" />
+                        />
 
                     <ImageView
                         android:layout_width="30dp"
@@ -69,7 +69,6 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
                         android:id="@+id/heart"
-                        android:visibility="visible"
                         android:src="@drawable/ic_heart_white" />
 
 
