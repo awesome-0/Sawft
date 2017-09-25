@@ -1,4 +1,4 @@
-package com.example.samuel.sawft;
+package com.example.samuel.sawft.Profile;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +16,7 @@ import com.example.samuel.sawft.Models.Like;
 import com.example.samuel.sawft.Models.Photo;
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
+import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.Heart;
@@ -159,6 +160,7 @@ public class ViewPost extends AppCompatActivity {
                 }
             });
         }
+        mCaption.setText(photo.getCaption());
 
 
     }
@@ -191,7 +193,7 @@ public class ViewPost extends AppCompatActivity {
                             print.l(mUsers.toString());
                             String[] split = mUsers.toString().split(",");
 
-                            if (mUsers.toString().contains(currentUser.getUsername())) {
+                            if (mUsers.toString().contains(currentUser.getUsername() + ",")){
                                 mLikedByCurrentUser = true;
                             } else {
                                 mLikedByCurrentUser = false;
@@ -253,8 +255,7 @@ public class ViewPost extends AppCompatActivity {
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            print.l("      Single tap recorded");
-            print.l("                " + String.valueOf(mLikedByCurrentUser ));
+
             DatabaseReference likeQuery = mRoot.child(Consts.PHOTOS_KEY)
                     .child(photo.getPhoto_id())
                     .child(Consts.LIKES_KEY);
@@ -272,13 +273,10 @@ public class ViewPost extends AppCompatActivity {
                     //case 1 : liked by current User
                     for(DataSnapshot single : dataSnapshot.getChildren()){
                         String KEYID = single.getKey();
-                        print.l("            key id is "  + KEYID);
                        // print.l("current status of liked by vurrent user is " + String.valueOf(mLikedByCurrentUser));
 
                         if(mLikedByCurrentUser && single.getValue(Like.class).getUser_id()
                                 .equals(current_user_id)){
-                            print.l("           " + single.getValue(Like.class).getUser_id() +
-                            " vs " + current_user_id + " vs " + String.valueOf(mLikedByCurrentUser));
                             mRoot.child(Consts.PHOTOS_KEY)
                                     .child(photo.getPhoto_id())
                                     .child(Consts.LIKES_KEY)

@@ -22,8 +22,6 @@ import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.GridImageAdapter;
-import com.example.samuel.sawft.Utils.print;
-import com.example.samuel.sawft.ViewPost;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

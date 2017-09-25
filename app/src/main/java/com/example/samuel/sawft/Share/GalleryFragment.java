@@ -19,10 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.samuel.sawft.Profile.ProfileActivity;
-import com.example.samuel.sawft.Profile.SettingsActivity;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.GridImageAdapter;
-import com.example.samuel.sawft.NextActivity;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.FilePaths;
 import com.example.samuel.sawft.Utils.FileSearch;

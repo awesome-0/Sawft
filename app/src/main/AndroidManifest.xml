@@ -28,8 +28,9 @@
         <activity android:name=".Profile.SettingsActivity" />
         <activity android:name=".Login.LoginActivity" />
         <activity android:name=".Login.RegisterActivity" />
-        <activity android:name=".NextActivity" />
-        <activity android:name=".ViewPost"></activity>
+        <activity android:name=".Share.NextActivity" />
+        <activity android:name=".Profile.ViewPost" />
+        <activity android:name=".Profile.CommentsActivity"></activity>
     </application>
 
 </manifest>

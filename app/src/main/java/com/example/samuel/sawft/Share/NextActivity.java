@@ -1,4 +1,4 @@
-package com.example.samuel.sawft;
+package com.example.samuel.sawft.Share;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.samuel.sawft.Home.HomeActivity;
 import com.example.samuel.sawft.Models.Like;
 import com.example.samuel.sawft.Models.Photo;
+import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.StringMan;
 import com.example.samuel.sawft.Utils.print;

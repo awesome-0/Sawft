@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.samuel.sawft.NextActivity;
 import com.example.samuel.sawft.Profile.ProfileActivity;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.Consts;
@@ -30,8 +29,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
