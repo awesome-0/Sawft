@@ -5,18 +5,26 @@ package com.example.samuel.sawft.Models;
  */
 
 public class User {
-    private String email,username;
+    private String email,username, user_id;
     private long phone_number;
 
-    public User(String email, String username, long phone_number) {
+    public User(String email, String username, long phone_number,String user_id) {
         this.email = email;
         this.username = username;
         this.phone_number = phone_number;
+        this.user_id = user_id;
     }
 
     public User() {
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
 
     public String getEmail() {
         return email;

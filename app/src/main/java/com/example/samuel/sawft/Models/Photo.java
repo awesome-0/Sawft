@@ -1,6 +1,7 @@
 package com.example.samuel.sawft.Models;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Samuel on 21/09/2017.
@@ -9,18 +10,32 @@ import java.io.Serializable;
 public class Photo implements Serializable {
     private String caption,date_created,tags,image_url
             ,photo_id, user_id;
+    private List<Like> likes;
 
-    public Photo(String caption, String date_created, String tags, String image_url, String photo_id, String image_id) {
+    public Photo(String caption, String date_created, String tags, String image_url, String photo_id, String user_id, List<Like> likes) {
         this.caption = caption;
         this.date_created = date_created;
         this.tags = tags;
         this.image_url = image_url;
         this.photo_id = photo_id;
-        this.user_id = image_id;
+        this.user_id = user_id;
+        this.likes = likes;
     }
 
     public Photo() {
     }
+    public Photo(String caption, String date_created, String tags, String image_url, String photo_id, String user_id) {
+        this.caption = caption;
+        this.date_created = date_created;
+        this.tags = tags;
+        this.image_url = image_url;
+        this.photo_id = photo_id;
+        this.user_id = user_id;
+
+    }
+
+
+
 
     public String getCaption() {
         return caption;
@@ -70,6 +85,14 @@ public class Photo implements Serializable {
         this.user_id = user_id;
     }
 
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
+
     @Override
     public String toString() {
         return "Photo{" +
@@ -79,6 +102,7 @@ public class Photo implements Serializable {
                 ", image_url='" + image_url + '\'' +
                 ", photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
+                ", likes=" + likes +
                 '}';
     }
 }

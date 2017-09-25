@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.samuel.sawft.Home.HomeActivity;
+import com.example.samuel.sawft.Models.Like;
 import com.example.samuel.sawft.Models.Photo;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.StringMan;
@@ -30,7 +31,9 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NextActivity extends AppCompatActivity {
@@ -92,6 +95,7 @@ public class NextActivity extends AppCompatActivity {
                     String imgUrl = task.getResult().getDownloadUrl().toString();
                     String photo_id = mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id)
                             .push().getKey();
+                    List<Like> like = new ArrayList<Like>();
                     Photo newPhoto = new Photo(caption,time,tag,imgUrl,photo_id,current_user_id);
                     Map addPhoto = new HashMap<>();
                     addPhoto.put(Consts.USER_PHOTOS_KEY + "/" + current_user_id + "/" + photo_id,newPhoto);
@@ -125,6 +129,7 @@ public class NextActivity extends AppCompatActivity {
                     String imgUrl = task.getResult().getDownloadUrl().toString();
                     String photo_id = mRoot.child(Consts.USER_PHOTOS_KEY).child(current_user_id)
                             .push().getKey();
+                    List<Like> like = new ArrayList<Like>();
                     Photo newPhoto = new Photo(caption,time,tag,imgUrl,photo_id,current_user_id);
                     Map addPhoto = new HashMap<>();
                     addPhoto.put(Consts.USER_PHOTOS_KEY + "/" + current_user_id + "/" + photo_id,newPhoto);

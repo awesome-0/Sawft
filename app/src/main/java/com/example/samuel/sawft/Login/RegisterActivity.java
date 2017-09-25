@@ -147,14 +147,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                         newUser = new UserDetails(desc, name, randUsername, website
                                 , "default", 0, 0, 0);
-                        registeredUser = new User(email,randUsername,0);
+                        registeredUser = new User(email,randUsername,0,user_id);
 
                     } else {
                         Log.d(TAG, "onComplete: username doesn't exist");
 
                         newUser = new UserDetails(desc, name, user_name, website
                                 , "default", 0, 0, 0);
-                        registeredUser = new User(email,user_name,0);
+                        registeredUser = new User(email,user_name,0,user_id);
                     }
 
                     userStatus.put(Consts.USER_STATUS_KEY + "/" +user_id, newUser);
