@@ -79,6 +79,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerVertical="true"
+                    android:id="@+id/commentBubble"
                     android:layout_toRightOf="@+id/r1"
                     android:src="@drawable/ic_speech" />
 
@@ -111,19 +112,19 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/image_view_comments"
+                    android:id="@+id/num_comments"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/caption"
                     android:layout_marginTop="5dp"
-                    android:text="View 3 comments"
+                    tools:text="View 3 comments"
                     android:textColor="@color/gray" />
 
                 <TextView
                     android:id="@+id/image_time_posted"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/image_view_comments"
+                    android:layout_below="@id/num_comments"
                     android:layout_marginTop="5dp"
                     android:text="3 Days ago"
                     android:textColor="@color/gray" />

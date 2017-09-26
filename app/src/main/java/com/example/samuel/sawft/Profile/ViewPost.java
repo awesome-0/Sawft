@@ -1,5 +1,6 @@
 package com.example.samuel.sawft.Profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
@@ -34,6 +35,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Comment;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ViewPost extends AppCompatActivity {
@@ -41,7 +44,8 @@ public class ViewPost extends AppCompatActivity {
     Photo photo;
     SquareImageView mImage;
     TextView mBAckLabel, mUsername, mCaption, mTimestamp, imageLikes;
-    ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite;
+    TextView num_comments;
+    ImageView mBackArrow, mEllipses, mHeartRed, mHeartWhite,commentBubble;
     CircleImageView mProfilePicture;
     UserDetails currentUser;
     private GestureDetector mGestureDetector;
@@ -54,6 +58,7 @@ public class ViewPost extends AppCompatActivity {
     private StringBuilder mUsers;
     private static final String TAG = "ViewPost";
     private String mLkesString = "";
+    private int mNumComments= 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +108,29 @@ public class ViewPost extends AppCompatActivity {
         mCaption = (TextView) findViewById(R.id.caption);
         mTimestamp = (TextView) findViewById(R.id.image_time_posted);
         imageLikes = (TextView) findViewById(R.id.image_likes);
+        commentBubble = (ImageView) findViewById(R.id.commentBubble);
+        num_comments = (TextView) findViewById(R.id.num_comments);
+        commentBubble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ViewPost.this, CommentsActivity.class);
+                intent.putExtra("photo",photo);
+                startActivity(intent);
+            }
+        });
+        mBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private void setWidgets() {
         mTimestamp.setText(DateUtils.getRelativeTimeSpanString(Long.parseLong(photo.getDate_created())));
         imageLikes.setText(mLkesString);
+
+
         Picasso.with(ViewPost.this).load(photo.getImage_url()).placeholder(R.drawable.ic_default_avatar)
                 .networkPolicy(NetworkPolicy.OFFLINE).fit().centerCrop()
                 .into(mImage, new Callback() {
@@ -179,7 +202,7 @@ public class ViewPost extends AppCompatActivity {
                 mUsers = new StringBuilder();
                 for (DataSnapshot singleSnap : dataSnapshot.getChildren()) {
                     Query user_id_query = mRoot.child(Consts.USERS_KEY)
-                            .orderByChild("user_id")
+                            .orderByChild(Consts.USER_ID)
                             .equalTo(singleSnap.getValue(Like.class).getUser_id());
                     user_id_query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -357,4 +380,28 @@ public class ViewPost extends AppCompatActivity {
         item.setChecked(true);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Query query = mRoot.child(Consts.PHOTOS_KEY).child(photo.getPhoto_id())
+                .child(Consts.COMMENTS);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot){
+                mNumComments = (int) dataSnapshot.getChildrenCount();
+                Log.e(TAG, "onDataChange: number of comments" + dataSnapshot.getChildrenCount() );
+                if(mNumComments == 0){
+                    num_comments.setText("No comments yet");
+                }
+                else{
+                    num_comments.setText("View " + mNumComments  + " comments");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 }

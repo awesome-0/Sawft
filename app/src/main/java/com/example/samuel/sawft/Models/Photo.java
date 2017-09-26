@@ -11,8 +11,23 @@ public class Photo implements Serializable {
     private String caption,date_created,tags,image_url
             ,photo_id, user_id;
     private List<Like> likes;
+    private List<Comment> comments;
 
-    public Photo(String caption, String date_created, String tags, String image_url, String photo_id, String user_id, List<Like> likes) {
+
+
+    public Photo() {
+
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public Photo(String caption, String date_created, String tags, String image_url, String photo_id, String user_id, List<Like> likes, List<Comment> comments) {
         this.caption = caption;
         this.date_created = date_created;
         this.tags = tags;
@@ -20,9 +35,7 @@ public class Photo implements Serializable {
         this.photo_id = photo_id;
         this.user_id = user_id;
         this.likes = likes;
-    }
-
-    public Photo() {
+        this.comments = comments;
     }
     public Photo(String caption, String date_created, String tags, String image_url, String photo_id, String user_id) {
         this.caption = caption;
@@ -33,9 +46,6 @@ public class Photo implements Serializable {
         this.user_id = user_id;
 
     }
-
-
-
 
     public String getCaption() {
         return caption;
@@ -103,6 +113,7 @@ public class Photo implements Serializable {
                 ", photo_id='" + photo_id + '\'' +
                 ", user_id='" + user_id + '\'' +
                 ", likes=" + likes +
+                ", comments=" + comments +
                 '}';
     }
 }

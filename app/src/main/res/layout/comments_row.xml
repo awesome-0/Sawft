@@ -11,6 +11,8 @@
         android:layout_height="45dp"
         app:civ_border_color="@color/black"
         android:id="@+id/commenter_image"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="7dp"
         app:civ_border_width="0.5dp"
         android:src="@drawable/ic_default_avatar"/>
     <RelativeLayout
@@ -49,28 +51,30 @@
             tools:text = "3 days ago"
             android:id="@+id/comment_time_stamp"
             android:layout_below="@id/comment"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:textSize="14sp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text = "3 likes"
+            android:text = "3 likes"
             android:id="@+id/comment_likes"
             android:layout_below="@id/comment"
             android:textStyle="bold"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@id/comment_time_stamp"
             android:layout_marginLeft="10dp"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:visibility="visible"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text = "Reply"
+            android:text = "Reply"
             android:id="@+id/comment_reply"
             android:textStyle="bold"
             android:layout_below="@id/comment"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
+            android:visibility="visible"
             android:layout_toRightOf="@id/comment_likes"
             android:layout_marginLeft="10dp"
             android:textSize="14sp"/>
