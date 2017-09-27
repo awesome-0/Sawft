@@ -143,7 +143,7 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
     public void loadImage(final Context ctx, final CircleImageView img,final String url){
 
         Picasso.with(ctx).load(url).placeholder(R.drawable.ic_default_avatar)
-                .networkPolicy(NetworkPolicy.OFFLINE).fit().centerCrop()
+                .networkPolicy(NetworkPolicy.OFFLINE).resize(200, 200).centerCrop()
                 .into(img, new Callback() {
                     @Override
                     public void onSuccess() {

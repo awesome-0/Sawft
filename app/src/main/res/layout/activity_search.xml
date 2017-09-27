@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/rel1">
         <!--top tool bar goes here -->
+        <include layout="@layout/search_toolbar"/>
 
     </RelativeLayout>
     <RelativeLayout
