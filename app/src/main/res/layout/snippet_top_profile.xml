@@ -93,7 +93,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="14dp"
-        android:text="Edit Profile"
+        tools:text="Edit Profile"
         android:gravity="center"
         android:background="@drawable/edit_profile_background"
         android:textAlignment="center"

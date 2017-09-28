@@ -1,5 +1,6 @@
 package com.example.samuel.sawft.Search;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.example.samuel.sawft.Models.User;
+import com.example.samuel.sawft.Profile.ProfileActivity;
 import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.BottomNavigationHelper;
 import com.example.samuel.sawft.Utils.Consts;
@@ -93,6 +95,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d(TAG, "onItemClick: navigating to profile ");
+                Intent UserProfile = new Intent(SearchActivity.this, ProfileActivity.class);
+                UserProfile.putExtra(Consts.USERS_KEY,mUsers.get(i));
+                startActivity(UserProfile);
             }
         });
     }
