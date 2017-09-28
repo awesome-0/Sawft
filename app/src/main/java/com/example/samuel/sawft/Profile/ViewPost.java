@@ -59,6 +59,7 @@ public class ViewPost extends AppCompatActivity {
     private static final String TAG = "ViewPost";
     private String mLkesString = "";
     private int mNumComments= 0;
+    User mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,8 @@ public class ViewPost extends AppCompatActivity {
         });
 
         setUpBottomNavBar();
-       getLikesString();
+        getCurrentUser();
+
         //setTestToggle();
 
     }
@@ -216,7 +218,7 @@ public class ViewPost extends AppCompatActivity {
                             print.l(mUsers.toString());
                             String[] split = mUsers.toString().split(",");
 
-                            if (mUsers.toString().contains(currentUser.getUsername() + ",")){
+                            if (mUsers.toString().contains(mCurrentUser.getUsername() + ",")){
                                 mLikedByCurrentUser = true;
                             } else {
                                 mLikedByCurrentUser = false;
@@ -265,6 +267,24 @@ public class ViewPost extends AppCompatActivity {
             }
         });
 
+
+    }
+    public void getCurrentUser(){
+
+        Query getUser = mRoot.child(Consts.USERS_KEY)
+                .child(mAuth.getCurrentUser().getUid());
+        getUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+               mCurrentUser = dataSnapshot.getValue(User.class);
+                getLikesString();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -340,12 +360,19 @@ public class ViewPost extends AppCompatActivity {
                 .child(Consts.LIKES_KEY)
                 .child(ID)
                 .setValue(like);
-        mRoot.child(Consts.USER_PHOTOS_KEY)
-                .child(current_user_id)
-                .child(photo.getPhoto_id())
-                .child(Consts.LIKES_KEY)
-                .child(ID)
-                .setValue(like);
+            if(photo.getUser_id().equals(current_user_id)){
+                mRoot.child(Consts.USER_PHOTOS_KEY)
+                        .child(current_user_id)
+                        .child(photo.getPhoto_id())
+                        .child(Consts.LIKES_KEY)
+                        .child(ID)
+                        .setValue(like);
+            }
+            photo = (Photo) getIntent().getExtras().getSerializable("photo");
+            currentUser = (UserDetails) getIntent().getExtras().getSerializable("user");
+            print.l(photo.toString());
+
+
       //  mLikedByCurrentUser = true;
         mHeart.toggleLikes();
         getLikesString();
