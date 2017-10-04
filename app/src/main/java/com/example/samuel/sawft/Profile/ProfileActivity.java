@@ -100,12 +100,105 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         setUpWidgets();
+        setProfileDetails();
         setUpBottomNavBar();
         setUpToolbar();
         manager = new GridLayoutManager(this, 3);
         setUpGridView(user_id);
 
 
+    }
+    private void setProfileDetails(){
+        if (getIntent() != null) {
+            if (!mFromSearch) {
+                Query followingquery = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
+                        .child(Consts.FOLLOWING);
+                followingquery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mNumFollowing = (int) dataSnapshot.getChildrenCount();
+                        mfollowing.setText(String.valueOf(mNumFollowing));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Query Followersquery = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
+                        .child(Consts.FOLLOWERS);
+                Followersquery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mNumFollowers = (int) dataSnapshot.getChildrenCount();
+                        mfollowers.setText(String.valueOf(mNumFollowers));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Query postQuery = mRoot.child(Consts.USER_PHOTOS_KEY).child(mAuth.getCurrentUser().getUid());
+                postQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mNumPosts = (int) dataSnapshot.getChildrenCount();
+                        mPosts.setText(String.valueOf(mNumPosts));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+            else {
+                Query followingquery = mRoot.child(Consts.USERS_KEY).child(searchedUser.getUser_id())
+                        .child(Consts.FOLLOWING);
+                followingquery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mNumFollowing = (int) dataSnapshot.getChildrenCount();
+                        mfollowing.setText(String.valueOf(mNumFollowing));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Query Followersquery = mRoot.child(Consts.USERS_KEY).child(searchedUser.getUser_id())
+                        .child(Consts.FOLLOWERS);
+                Followersquery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mNumFollowers = (int) dataSnapshot.getChildrenCount();
+                        mfollowers.setText(String.valueOf(mNumFollowers));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+                Query postQuery = mRoot.child(Consts.USER_PHOTOS_KEY).child(searchedUser.getUser_id());
+                postQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mNumPosts = (int) dataSnapshot.getChildrenCount();
+                        mPosts.setText(String.valueOf(mNumPosts));
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
     }
 
     private void setUpGridView(String Uid) {
@@ -320,62 +413,6 @@ public class ProfileActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
         name.setText(current_user.getDisplay_name());
         desc.setText(current_user.getDescription());
-        Query query = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
-                .child(Consts.FOLLOWING);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mNumFollowing = (int) dataSnapshot.getChildrenCount();
-                mfollowing.setText(String.valueOf(mNumFollowing));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        Query followingquery = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
-                .child(Consts.FOLLOWING);
-        followingquery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mNumFollowing = (int) dataSnapshot.getChildrenCount();
-                mfollowing.setText(String.valueOf(mNumFollowing));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        Query Followersquery = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
-                .child(Consts.FOLLOWERS);
-        Followersquery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mNumFollowers = (int) dataSnapshot.getChildrenCount();
-                mfollowers.setText(String.valueOf(mNumFollowers));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        Query postQuery = mRoot.child(Consts.USER_PHOTOS_KEY).child(mAuth.getCurrentUser().getUid());
-        postQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mNumPosts = (int) dataSnapshot.getChildrenCount();
-                mPosts.setText(String.valueOf(mNumPosts));
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
         website.setText(current_user.getWebsite());
         username.setText(current_user.getUsername());
         userStatBundle.putString(getString(R.string.username), current_user.getUsername());
