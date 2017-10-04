@@ -53,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
     private GridAdapter adapter;
     private GridView recyclerView;
     private GridLayoutManager manager;
-    private TextView followers, following, posts, name, desc, website, username, edit_profile;
+    private TextView mfollowers, mfollowing, mPosts, name, desc, website, username, edit_profile;
     private ValueEventListener getDetails;
     private FirebaseAuth mAuth;
     private DatabaseReference mRoot;
@@ -61,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
     Bundle userStatBundle = new Bundle();
     Bundle userBundle = new Bundle();
     UserDetails current_user;
+    int mNumFollowers,mNumFollowing,mNumPosts = 0;
 
     boolean mFromSearch;
     User searchedUser;
@@ -170,9 +171,9 @@ public class ProfileActivity extends AppCompatActivity {
         profilePhoto = (CircleImageView) findViewById(R.id.profile_picture);
         recyclerView = (GridView) findViewById(R.id.grid_view);
         adapter = new GridAdapter(ProfileActivity.this);
-        followers = (TextView) findViewById(R.id.tvFollowers);
-        following = (TextView) findViewById(R.id.tvFollowing);
-        posts = (TextView) findViewById(R.id.tvPost);
+        mfollowers = (TextView) findViewById(R.id.tvFollowers);
+        mfollowing = (TextView) findViewById(R.id.tvFollowing);
+        mPosts = (TextView) findViewById(R.id.tvPost);
         name = (TextView) findViewById(R.id.name);
         desc = (TextView) findViewById(R.id.desc);
         website = (TextView) findViewById(R.id.website);
@@ -189,13 +190,13 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                             if(!dataSnapshot.exists()){
-                                Log.e(TAG, "onDataChange: you are not following this person" );
+                                Log.e(TAG, "onDataChange: you are not mfollowing this person" );
                                 edit_profile.setText("Follow");
                                 edit_profile.setBackgroundColor(getResources().getColor(R.color.blue));
                                 edit_profile.setTextColor(getResources().getColor(R.color.white));
                             }
                             else {
-                                Log.e(TAG, "onDataChange: yes you are following person" );
+                                Log.e(TAG, "onDataChange: yes you are mfollowing person" );
                                 edit_profile.setText("UnFollow");
                                 edit_profile.setBackgroundColor(getResources().getColor(R.color.red));
                                 edit_profile.setTextColor(getResources().getColor(R.color.white));
@@ -226,7 +227,7 @@ public class ProfileActivity extends AppCompatActivity {
                     editProf.putExtra(getString(R.string.userBundle), userBundle);
                     startActivity(editProf);
                 } else if(edit_profile.getText().toString().toLowerCase().equals("follow")){
-                    Log.e(TAG, "onClick: following user now");
+                    Log.e(TAG, "onClick: mfollowing user now");
                     followUser();
 
 
@@ -317,12 +318,64 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void bindViews(final UserDetails current_user) {
         progressBar.setVisibility(View.INVISIBLE);
-
-        posts.setText(String.valueOf(current_user.getPosts()));
         name.setText(current_user.getDisplay_name());
         desc.setText(current_user.getDescription());
-        following.setText(String.valueOf(current_user.getFollowing()));
-        followers.setText(String.valueOf(current_user.getFollowers()));
+        Query query = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
+                .child(Consts.FOLLOWING);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mNumFollowing = (int) dataSnapshot.getChildrenCount();
+                mfollowing.setText(String.valueOf(mNumFollowing));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        Query followingquery = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
+                .child(Consts.FOLLOWING);
+        followingquery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mNumFollowing = (int) dataSnapshot.getChildrenCount();
+                mfollowing.setText(String.valueOf(mNumFollowing));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        Query Followersquery = mRoot.child(Consts.USERS_KEY).child(mAuth.getCurrentUser().getUid())
+                .child(Consts.FOLLOWERS);
+        Followersquery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mNumFollowers = (int) dataSnapshot.getChildrenCount();
+                mfollowers.setText(String.valueOf(mNumFollowers));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        Query postQuery = mRoot.child(Consts.USER_PHOTOS_KEY).child(mAuth.getCurrentUser().getUid());
+        postQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                mNumPosts = (int) dataSnapshot.getChildrenCount();
+                mPosts.setText(String.valueOf(mNumPosts));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         website.setText(current_user.getWebsite());
         username.setText(current_user.getUsername());
         userStatBundle.putString(getString(R.string.username), current_user.getUsername());
