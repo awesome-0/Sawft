@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 
 import com.example.samuel.sawft.Models.Follow;
@@ -35,8 +36,11 @@ public class HomeFragment extends Fragment {
     private DatabaseReference mRoot;
     private ListView listView;
     private ArrayList<Photo> mPhotos;
+    private ArrayList<Photo> mPaginatedPhotos = new ArrayList<>();
     private  ArrayList<String> mFollowing;
     String current_user_id;
+    public int Results;
+    int iterations;
     MainFeedListAdapter adapter;
 
 
@@ -96,6 +100,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void displayphotos() {
+        mPaginatedPhotos = new ArrayList<>();
         if(mPhotos != null) {
             Collections.sort(mPhotos, new Comparator<Photo>() {
                 @Override
@@ -106,9 +111,62 @@ public class HomeFragment extends Fragment {
 
             });
             Collections.reverse(mPhotos);
-            adapter = new MainFeedListAdapter(getContext(),R.layout.mainfeed,mPhotos);
-            listView.setAdapter(adapter);
+             Results =3;
+             iterations = mPhotos.size();
+            if(iterations > 3){
+               iterations = 3;
+            }
+            for(int i = 0;i<iterations;i++){
+                mPaginatedPhotos.add(mPhotos.get(i));
+            }
+            adapter = new MainFeedListAdapter(getContext(),R.layout.mainfeed,mPaginatedPhotos);
 
+            listView.setAdapter(adapter);
+            listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView absListView, int i) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView absListView,int firstVisibleItem,int visibleItemCount, final int totalItemCount) {
+                    if (totalItemCount > 0)
+                    {
+                        int lastInScreen = firstVisibleItem + visibleItemCount;
+                        if(lastInScreen == totalItemCount)
+                        {
+                            displayMorePhotos();
+                        }
+                    }
+
+                }
+            });
+
+        }
+
+    }
+    private void displayMorePhotos(){
+        if(mPhotos.size() > Results && mPhotos.size() >0){
+            try{
+                if(mPhotos.size() > (Results + 3)){
+
+                    Log.d(TAG, "displayMorePhotos: there are still more than 3 photos");
+                    iterations = 3;
+                }
+                else{
+                    iterations = mPhotos.size() - Results;
+                }
+                for(int i = Results ;i<Results+iterations;i++){
+                 mPaginatedPhotos.add(mPhotos.get(i));
+                }
+                Results+=iterations;
+                adapter.notifyDataSetChanged();
+
+            }catch (NullPointerException e){
+                Log.e(TAG, "displayMorePhotos: NullPointerException "+ e.getMessage() );
+            }catch (IndexOutOfBoundsException e){
+                Log.e(TAG, "displayMorePhotos: IndexOutOfBoundsException "+ e.getMessage() );
+            }
         }
 
     }

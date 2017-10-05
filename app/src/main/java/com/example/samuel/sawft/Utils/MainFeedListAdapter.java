@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.samuel.sawft.Models.Comment;
@@ -22,7 +23,9 @@ import com.example.samuel.sawft.Models.Photo;
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
 import com.example.samuel.sawft.Profile.CommentsActivity;
+import com.example.samuel.sawft.Profile.ProfileActivity;
 import com.example.samuel.sawft.R;
+import com.example.samuel.sawft.Search.SearchActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -88,6 +91,8 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
             holder.mUsers = new StringBuilder();
             holder.mPhotoUser = new UserDetails();
             holder.mCurrentUser = new UserDetails();
+            holder.post_bar = convertView.findViewById(R.id.rel1);
+            holder.PhotoUser = new User();
             convertView.setTag(holder);
 
         } else {
@@ -101,14 +106,14 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         loadImage(getItem(position).getImage_url(),holder,ctx);
         loadPhotoDetails(holder,getItem(position));
         getLikesString(holder);
-        //setLikesString(holder,holder.mLkesString);
-
-//        List<Comment>comments = holder.photo.getComments();
-//        try {
-//            holder.num_comments.setText("View all " + comments.size() + " Comments");
-//        }catch (NullPointerException e){
-//            Log.e(TAG, "getView: NullPointer exception " + e.getMessage() );
-//        }
+        holder.post_bar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent UserProfile = new Intent(ctx, ProfileActivity.class);
+                UserProfile.putExtra(Consts.USERS_KEY,holder.PhotoUser);
+                ctx.startActivity(UserProfile);
+            }
+        });
 
 
 
@@ -175,6 +180,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
                // Log.e(TAG, "onDataChange: current user is " + holder.mPhotoUser.toString() );
                 loadUserDetails(holder.mPhotoUser,holder);
                 getLikesString(holder);
+
             }
 
             @Override
@@ -182,6 +188,21 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
             }
         });
+        Query Userquery = mRoot.child(Consts.USERS_KEY)
+                .child(photo.getUser_id());
+        Userquery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                holder.PhotoUser = dataSnapshot.getValue(User.class);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
 
     }
@@ -393,9 +414,11 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         private StringBuilder mUsers;
         private String mLkesString = "";
         private int mNumComments = 0;
+        RelativeLayout post_bar;
         CircleImageView mProfilePicture;
         UserDetails mPhotoUser;
         UserDetails mCurrentUser;
+        User PhotoUser;
 
     }
 

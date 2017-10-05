@@ -281,20 +281,25 @@ public class ProfileActivity extends AppCompatActivity {
             following.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (searchedUser.getUser_id().equals(mAuth.getCurrentUser().getUid())) {
 
-                            if(!dataSnapshot.exists()){
-                                Log.e(TAG, "onDataChange: you are not mfollowing this person" );
-                                edit_profile.setText("Follow");
-                                edit_profile.setBackgroundColor(getResources().getColor(R.color.blue));
-                                edit_profile.setTextColor(getResources().getColor(R.color.white));
-                            }
-                            else {
-                                Log.e(TAG, "onDataChange: yes you are mfollowing person" );
-                                edit_profile.setText("UnFollow");
-                                edit_profile.setBackgroundColor(getResources().getColor(R.color.red));
-                                edit_profile.setTextColor(getResources().getColor(R.color.white));
-                            }
+                                edit_profile.setText("Edit Profile");
+                                edit_profile.setTextColor(getResources().getColor(R.color.black));
+                            } else {
 
+                                if (!dataSnapshot.exists()) {
+                                    Log.e(TAG, "onDataChange: you are not mfollowing this person");
+                                    edit_profile.setText("Follow");
+                                    edit_profile.setBackgroundColor(getResources().getColor(R.color.blue));
+                                    edit_profile.setTextColor(getResources().getColor(R.color.white));
+                                } else {
+                                    Log.e(TAG, "onDataChange: yes you are mfollowing person");
+                                    edit_profile.setText("UnFollow");
+                                    edit_profile.setBackgroundColor(getResources().getColor(R.color.red));
+                                    edit_profile.setTextColor(getResources().getColor(R.color.white));
+                                }
+
+                            }
                         }
 
                         @Override
