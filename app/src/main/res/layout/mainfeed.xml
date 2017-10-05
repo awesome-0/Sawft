@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context="com.example.samuel.sawft.Profile.ViewPost">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@color/white">
+        <RelativeLayout
+            android:id="@+id/rel2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rel1">
+
+            <!-- body -->
+            <include layout="@layout/profile_bar" />
+
+
+        </RelativeLayout>
+        <com.example.samuel.sawft.Utils.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/square_image"
+            android:layout_below="@id/rel2"/>
+
+        <RelativeLayout
+            android:id="@+id/rel3"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:layout_below="@+id/square_image">
+
+            <RelativeLayout
+                android:id="@+id/r1"
+                android:layout_width="60dp"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/heart_red"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_heart_red"
+                    android:visibility="invisible" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/heart"
+                    android:visibility="visible"
+                    android:src="@drawable/ic_heart_white" />
+
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/commentBubble"
+                android:layout_toRightOf="@+id/r1"
+                android:src="@drawable/ic_speech" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rel4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rel3"
+            android:background="@color/white"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/image_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Liked by awesome,rachel,timilehin,isaac"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/image_likes"
+                android:layout_marginTop="5dp"
+                android:text="awesome_cos where the hell #try #yui"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/num_comments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/caption"
+                android:layout_marginTop="5dp"
+                tools:text="View 3 comments"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:id="@+id/image_time_posted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/num_comments"
+                android:layout_marginTop="5dp"
+                android:text="3 Days ago"
+                android:textColor="@color/gray" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+
+
+</RelativeLayout>
+
+
+
+
+
+
+

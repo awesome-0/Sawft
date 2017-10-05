@@ -1,11 +1,8 @@
 package com.example.samuel.sawft.Profile;
 
 import android.content.Context;
-import android.inputmethodservice.InputMethodService;
-import android.provider.ContactsContract;
-import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,14 +16,12 @@ import com.example.samuel.sawft.R;
 import com.example.samuel.sawft.Utils.CommentsAdapter;
 import com.example.samuel.sawft.Utils.Consts;
 import com.example.samuel.sawft.Utils.print;
-import com.google.android.gms.wallet.InstrumentInfo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -40,7 +35,7 @@ public class CommentsActivity extends AppCompatActivity {
     private DatabaseReference mRoot;
     private FirebaseAuth mAuth;
     private EditText mComments;
-    private ImageView mSendComments,back_btn;
+    private ImageView mSendComments, back_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +45,7 @@ public class CommentsActivity extends AppCompatActivity {
         comList = new ArrayList<>();
         mRoot = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
-        if(getIntent() != null){
+        if (getIntent() != null) {
             photo = (Photo) getIntent().getExtras().getSerializable("photo");
             Log.d(TAG, "onCreate: photo:" + photo.toString());
         }
@@ -59,18 +54,17 @@ public class CommentsActivity extends AppCompatActivity {
         mSendComments = (ImageView) findViewById(R.id.send_comments);
 
         setChildEventListener();
-        adapter = new CommentsAdapter(CommentsActivity.this,R.layout.comments_row,comList);
+        adapter = new CommentsAdapter(CommentsActivity.this, R.layout.comments_row, comList);
         listview.setAdapter(adapter);
         mSendComments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!mComments.getText().toString().equals("")){
+                if (!mComments.getText().toString().equals("")) {
                     sendComments(mComments.getText().toString());
                     mComments.setText("");
 
-                }
-                else{
-                    print.t(CommentsActivity.this,"You cant post an empty comment");
+                } else {
+                    print.t(CommentsActivity.this, "You cant post an empty comment");
                 }
             }
         });
@@ -92,29 +86,31 @@ public class CommentsActivity extends AppCompatActivity {
         comment.setComment(s);
         mRoot.child(Consts.PHOTOS_KEY).child(photo.getPhoto_id())
                 .child(Consts.COMMENTS).child(comId).setValue(comment);
-        mRoot.child(Consts.USER_PHOTOS_KEY).
-                child(mAuth.getCurrentUser().getUid()).child(photo.getPhoto_id())
-                .child(Consts.COMMENTS).child(comId).setValue(comment);
+        if (photo.getUser_id() == mAuth.getCurrentUser().getUid()) {
+
+            mRoot.child(Consts.USER_PHOTOS_KEY).
+                    child(mAuth.getCurrentUser().getUid()).child(photo.getPhoto_id())
+                    .child(Consts.COMMENTS).child(comId).setValue(comment);
+        }
         closeKeyboard();
     }
 
     private void closeKeyboard() {
         View view = getCurrentFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public void setChildEventListener(){
+    public void setChildEventListener() {
 
         getComments = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e(TAG, "onChildAdded: new child added " + dataSnapshot.toString() );
+                Log.e(TAG, "onChildAdded: new child added " + dataSnapshot.toString());
 
 
                 Comment comment = dataSnapshot.getValue(Comment.class);
-                    comList.add(comment);
-
+                comList.add(comment);
 
 
             }
