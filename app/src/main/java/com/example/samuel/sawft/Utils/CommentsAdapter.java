@@ -90,6 +90,14 @@ public class CommentsAdapter extends ArrayAdapter<Comment> {
             holder.time_stamp.setText(Ts.substring(0,mId+1));
 
         }
+        else if(Ts.contains("wee")){
+            int mId = Ts.indexOf("w");
+            holder.time_stamp.setText(Ts.substring(0,mId+1));
+
+        }
+        else{
+            holder.time_stamp.setText(Ts.substring(0,6));
+        }
 
 
 

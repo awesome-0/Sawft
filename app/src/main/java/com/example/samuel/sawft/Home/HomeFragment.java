@@ -61,10 +61,8 @@ public class HomeFragment extends Fragment {
             current_user_id = mAuth.getCurrentUser().getUid();
         }
 
-        Log.e(TAG, "onDataChange: before getFollowing is called size of following is  " + mFollowing.size() );
-        getFollowing();
 
-        Log.e(TAG, "onDataChange: after getFollowing is called size of following is  " + mFollowing.size() );
+        getFollowing();
 
 
 

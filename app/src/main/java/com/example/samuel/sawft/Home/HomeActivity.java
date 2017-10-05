@@ -20,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUMBER = 0;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    ViewPager pager;
 
 
 
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
         adapter.addFragments(new HomeFragment());
         adapter.addFragments(new MessagesFragment());
 
-        ViewPager pager = (ViewPager)findViewById(R.id.container);
+        pager = (ViewPager)findViewById(R.id.container);
         pager.setAdapter(adapter);
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         tabs.setupWithViewPager(pager);
@@ -77,6 +78,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
+        pager.setCurrentItem(1);
     }
 
     @Override

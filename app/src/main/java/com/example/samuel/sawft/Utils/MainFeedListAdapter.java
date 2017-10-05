@@ -1,10 +1,11 @@
 package com.example.samuel.sawft.Utils;
 
 import android.content.Context;
-import android.provider.ContactsContract;
+import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -20,7 +21,7 @@ import com.example.samuel.sawft.Models.Like;
 import com.example.samuel.sawft.Models.Photo;
 import com.example.samuel.sawft.Models.User;
 import com.example.samuel.sawft.Models.UserDetails;
-import com.example.samuel.sawft.Profile.ProfileActivity;
+import com.example.samuel.sawft.Profile.CommentsActivity;
 import com.example.samuel.sawft.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -85,16 +86,23 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
             holder.mHeart = new Heart(holder.mHeartWhite, holder.mHeartRed);
             holder.mGestureDetector = new GestureDetector(parent.getContext(), new GestureListener(holder));
             holder.mUsers = new StringBuilder();
+            holder.mPhotoUser = new UserDetails();
             holder.mCurrentUser = new UserDetails();
             convertView.setTag(holder);
 
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        getCurrentUser(holder,getItem(position));
+        getPhotoUser(holder,getItem(position));
+        getCurrentUser(holder);
         getNumComments(getItem(position),holder);
 
-        loadImage(getItem(position).getImage_url(),holder.mImage,ctx);
+
+        loadImage(getItem(position).getImage_url(),holder,ctx);
+        loadPhotoDetails(holder,getItem(position));
+        getLikesString(holder);
+        //setLikesString(holder,holder.mLkesString);
+
 //        List<Comment>comments = holder.photo.getComments();
 //        try {
 //            holder.num_comments.setText("View all " + comments.size() + " Comments");
@@ -108,7 +116,14 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         return convertView;
     }
 
-    private void getNumComments(Photo photo,final ViewHolder holder) {
+    private void loadPhotoDetails(ViewHolder holder, Photo item) {
+        holder.mCaption.setText(item.getCaption());
+        holder.mTimestamp.setText(String.valueOf(DateUtils.getRelativeTimeSpanString(Long.parseLong(item.getDate_created()))));
+
+    }
+
+
+    private void getNumComments(final Photo photo, final ViewHolder holder) {
         final List<Comment>comments = new ArrayList<>();
 
         Query query = mRoot.child(Consts.PHOTOS_KEY)
@@ -132,17 +147,34 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
             }
         });
+        holder.num_comments.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent commentsIntent = new Intent(ctx, CommentsActivity.class);
+                commentsIntent.putExtra("photo",photo);
+                ctx.startActivity(commentsIntent);
+            }
+        });
+        holder.commentBubble.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent commentsIntent = new Intent(ctx, CommentsActivity.class);
+                commentsIntent.putExtra("photo",photo);
+                ctx.startActivity(commentsIntent);
+            }
+        });
     }
 
-    private void getCurrentUser(final ViewHolder holder,final Photo photo) {
+    private void getPhotoUser(final ViewHolder holder, final Photo photo) {
         Query query = mRoot.child(Consts.USER_STATUS_KEY)
                 .child(photo.getUser_id());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                holder.mCurrentUser = dataSnapshot.getValue(UserDetails.class);
-               // Log.e(TAG, "onDataChange: current user is " + holder.mCurrentUser.toString() );
-                loadUserDetails(holder.mCurrentUser,holder);
+                holder.mPhotoUser = dataSnapshot.getValue(UserDetails.class);
+               // Log.e(TAG, "onDataChange: current user is " + holder.mPhotoUser.toString() );
+                loadUserDetails(holder.mPhotoUser,holder);
+                getLikesString(holder);
             }
 
             @Override
@@ -174,9 +206,9 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
 
     }
 
-    private void loadImage(final String image_url, final SquareImageView mImage, final Context ctx) {
+    private void loadImage(final String image_url, final ViewHolder holder, final Context ctx) {
         Picasso.with(ctx).load(image_url).networkPolicy(NetworkPolicy.OFFLINE)
-                .fit().centerCrop().into(mImage, new Callback() {
+                .fit().centerCrop().into(holder.mImage, new Callback() {
             @Override
             public void onSuccess() {
 
@@ -185,9 +217,29 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
             @Override
             public void onError() {
                 Picasso.with(ctx).load(image_url)
-                        .fit().centerCrop().into(mImage);
+                        .fit().centerCrop().into(holder.mImage);
             }
         });
+
+    }
+    private void getCurrentUser(final ViewHolder holder){
+        Query query = mRoot.child(Consts.USER_STATUS_KEY)
+                .child(current_user_id);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                holder.mCurrentUser = dataSnapshot.getValue(UserDetails.class);
+                // Log.e(TAG, "onDataChange: current user is " + holder.mPhotoUser.toString() );
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
     private void addANewLike(ViewHolder holder) {
@@ -342,6 +394,7 @@ public class MainFeedListAdapter extends ArrayAdapter<Photo> {
         private String mLkesString = "";
         private int mNumComments = 0;
         CircleImageView mProfilePicture;
+        UserDetails mPhotoUser;
         UserDetails mCurrentUser;
 
     }
