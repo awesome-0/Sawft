@@ -181,13 +181,9 @@ public class HomeFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot singleSnaphot : dataSnapshot.getChildren()){
                     String fUid = singleSnaphot.getValue(Follow.class).getUser_id();
-                   // Log.e(TAG, "onDataChange: following " + fUid );
                     mFollowing.add(fUid);
-
                 }
-                Log.e(TAG, "onDataChange: inside the get following method folowing size is " + mFollowing.size() );
                 getPhotos();
-
             }
 
             @Override
