@@ -182,6 +182,7 @@ public class HomeFragment extends Fragment {
                 for(DataSnapshot singleSnaphot : dataSnapshot.getChildren()){
                     String fUid = singleSnaphot.getValue(Follow.class).getUser_id();
                     mFollowing.add(fUid);
+                    //juuu
                 }
                 getPhotos();
             }
